@@ -16,5 +16,5 @@ spec:
         - '/bin/bash'
         - '-ec'
         - >
-          curl http://localhost:5000
+          curl http://$RESTAPI_SERVICE_HOST:$RESTAPI_SERVICE_PORT
   restartPolicy: Never
