@@ -15,9 +15,11 @@ class QuickstartUser(HttpUser):
         self.client.get("/devices")
 
     @task(3)
-    def add_devices(self):
-                self.client.put("/device/floorlamp"+ str(uuid.uuid1()), json={
-    "name": "Floor Lamp",
-    "device_type": "switch",
-    "controller_gateway": "192.1.68.0.2"
-    })
+    def add_and_delete_devices(self):
+        identifier = uuid.uuid1()
+        self.client.put("/device/floorlamp"+ str(identifier), json={
+        "name": "Floor Lamp",
+        "device_type": "switch",
+        "controller_gateway": "192.1.68.0.2"
+        })
+        self.client.delete("/device/floorlamp"+ str(identifier))
