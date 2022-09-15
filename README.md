@@ -14,18 +14,20 @@
 
 ```json
 [
-    {
-        "identifier": "floor-lamp",
-        "name": "Floor Lamp",
-        "device_type": "switch",
-        "controller_gateway": "192.1.68.0.2"
-    },
-    {
-        "identifier": "samsung-tv",
-        "name": "Living Room TV",
-        "device_type": "tv",
-        "controller_gateway": "192.168.0.9"
-    }
+    "floor-lamp" :
+        {
+            "identifier": "floor-lamp",
+            "name": "Floor Lamp",
+            "device_type": "switch",
+            "controller_gateway": "192.1.68.0.2"
+        },
+    "samsung-tv" :
+        {
+            "identifier": "samsung-tv",
+            "name": "Living Room TV",
+            "device_type": "tv",
+            "controller_gateway": "192.168.0.9"
+        }
 ]
 ```
 
@@ -122,4 +124,10 @@ Need to install locust before and that can be done using:
 The command which can be used for running the stress test locally:
 
 `locust --headless --users 1 --spawn-rate 1 -H http://localhost:5000 -f ./load-testing/stress.py -t 5m`
+
+## Accessing the swagger UI
+
+To access the swagger UI integrated with the app use /swagger endpoint as below:
+`http://localhost:5000/swagger`
+
 
