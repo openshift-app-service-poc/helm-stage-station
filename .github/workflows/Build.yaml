@@ -37,32 +37,45 @@ jobs:
           file: 'test-config/test/helm/templates/device-registry.yaml'          # File to read from
           key-path: '["metadata"]' # Access the runs key then the using key and returns the value.
 
-      - name: Display chart-read-yaml output
+      - name: Write metadata to a json file
+        if: ${{ steps.check_files.outputs.updated_file != 'none' }}
         env:
           METADATA: ${{ steps.template-yaml-data.outputs.data }}
         run: |
-          echo $METADATA
-          echo $METADATA > temp.json
+          echo metadata: $METADATA
+          echo $METADATA | sed 's:app.kubernetes.io/::g'
+          echo $METADATA | sed 's:app.kubernetes.io/::g' > temp.json
 
       - name: get config version from metadata
         id: config-version
         uses: notiz-dev/github-action-json-property@release
         with:
             path: 'temp.json'
-            prop_path: 'version'
+            prop_path: 'labels.version'
 
       - if:  ${{ steps.config-version.outputs.prop != steps.chart-yaml-data.outputs.data }}
         run: echo "we have some work to do version was $steps.chart-yaml-data.outputs.data and now $steps.config-version.outputs.prop"
 
-      - name: Update config file
+      - name: Update config file to trigger pipeline
+        id: update_file
         if:  ${{ steps.config-version.outputs.prop != steps.chart-yaml-data.outputs.data }}
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          valueFile: 'test-config/test/helm/templates/device-registry.yaml'
-          propertyPath: 'metadata.version'
-          value: ${{ steps.chart-yaml-data.outputs.data }}
-          commitChange: false
-          updateFile: true
+        run: |
+          to_replace=""
+          while read -r line;
+          do
+            echo "check $line"
+            if [[ "$line" == "app.kubernetes.io/version"* ]]; then
+                to_replace=$line
+                echo "to_replace: $to_replace"
+                break
+            fi
+          done < 'test-config/test/helm/templates/device-registry.yaml'
+
+          if [ "$to_replace" != "" ]; then
+              replace_with="app.kubernetes.io/version: "${{ steps.chart-yaml-data.outputs.data }}
+              echo "replace_with: $replace_with"
+              sed -i "s|$to_replace|$replace_with|" test-config/test/helm/templates/device-registry.yaml
+          fi
 
       - name: Pushes test file
         uses: dmnemec/copy_file_to_another_repo_action@main
