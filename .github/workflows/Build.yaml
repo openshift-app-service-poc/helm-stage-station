@@ -3,8 +3,6 @@ name: Trigger staging for version change
 on:
   push:
     branches: [ main ]
-  pull_request_target:
-    types: [opened, synchronize, reopened, edited, ready_for_review, labeled]
 
 jobs:
   build:
@@ -36,7 +34,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
-          repository: openshift-app-service-poc/helm-station-config
+          repository: Kartikey-star/helm-station-config
           path: "config-chart"
 
       - name: Get metadata from chart config yaml
@@ -139,4 +137,3 @@ jobs:
           user_email: 'mmulholl@redhat.com'
           user_name: 'mmulholla'
           commit_message: 'Update config chart values device tag for Argo CD pipeline testing'
-
