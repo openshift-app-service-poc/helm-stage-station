@@ -27,7 +27,7 @@ jobs:
           key-path: '["version"]' # Access the runs key then the using key and retuns the value.
 
       - name: Get Values Tag from values.yaml
-        id: pr-value-yaml-data
+        id: pr-values-yaml-data
         uses: KJ002/read-yaml@main      # You may wish to replace main with a version tag such as '1.6' etc.
         with:
           file: 'charts/device-registry/values.yaml'          # File to read from
@@ -48,7 +48,7 @@ jobs:
           key-path: '["version"]' # Access the runs key then the using key and returns the value.
 
       - name: Get metadata from chart config yaml
-        id: config-value-yaml-data
+        id: config-values-yaml-data
         uses: KJ002/read-yaml@main      # You may wish to replace main with a version tag such as '1.6' etc.
         with:
           file: 'config-chart/chart/device-registry/values-test.yaml'          # File to read from
