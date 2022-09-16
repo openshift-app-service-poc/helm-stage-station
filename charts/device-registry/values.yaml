@@ -14,7 +14,7 @@ mysql:
 
 device:
   image: "quay.io/susdas/device_image"
-  tag: "latest"
+  tag: "1.0.0"
 
 application:
   name: device-registry-app
