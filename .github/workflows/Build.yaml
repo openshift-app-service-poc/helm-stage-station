@@ -107,7 +107,7 @@ jobs:
           updateFile: true
 
       - name: Update device tag
-        if:  ${{steps.config-values-yaml-data.outputs.data != steps.pr-values-yaml-data.outputs.data}}
+        if:  ${{ steps.config-values-yaml-data.outputs.data != steps.pr-values-yaml-data.outputs.data}}
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: 'config-chart/chart/device-registry/values-test.yaml'
