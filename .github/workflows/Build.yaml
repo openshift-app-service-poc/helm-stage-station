@@ -1,0 +1,91 @@
+name: Trigger staging for version change
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Current Update
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Get Chart Version from Chart.yaml
+        id: chart-yaml-data
+        uses: KJ002/read-yaml@main      # You may wish to replace main with a version tag such as '1.6' etc.
+        with:
+          file: 'charts/device-registry/Chart.yaml'          # File to read from
+          key-path: '["version"]' # Access the runs key then the using key and retuns the value.
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          repository: openshift-app-service-poc/helm-station-config
+          path: "test-config"
+
+      - name: Get metadta from chart config yaml
+        id: template-yaml-data
+        uses: KJ002/read-yaml@main      # You may wish to replace main with a version tag such as '1.6' etc.
+        with:
+          file: 'test-config/test/helm/templates/device-registry.yaml'          # File to read from
+          key-path: '["metadata"]' # Access the runs key then the using key and returns the value.
+
+      - name: Write metadata to a json file
+        if: ${{ steps.check_files.outputs.updated_file != 'none' }}
+        env:
+          METADATA: ${{ steps.template-yaml-data.outputs.data }}
+        run: |
+          echo metadata: $METADATA
+          echo $METADATA | sed 's:app.kubernetes.io/::g'
+          echo $METADATA | sed 's:app.kubernetes.io/::g' > temp.json
+
+      - name: get config version from metadata
+        id: config-version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+            path: 'temp.json'
+            prop_path: 'labels.version'
+
+      - if:  ${{ steps.config-version.outputs.prop != steps.chart-yaml-data.outputs.data }}
+        run: echo "we have some work to do version was $steps.chart-yaml-data.outputs.data and now $steps.config-version.outputs.prop"
+
+      - name: Update config file to trigger pipeline
+        id: update_file
+        if:  ${{ steps.config-version.outputs.prop != steps.chart-yaml-data.outputs.data }}
+        run: |
+          to_replace=""
+          while read -r line;
+          do
+            echo "check $line"
+            if [[ "$line" == "app.kubernetes.io/version"* ]]; then
+                to_replace=$line
+                echo "to_replace: $to_replace"
+                break
+            fi
+          done < 'test-config/test/helm/templates/device-registry.yaml'
+
+          if [ "$to_replace" != "" ]; then
+              replace_with="app.kubernetes.io/version: "${{ steps.chart-yaml-data.outputs.data }}
+              echo "replace_with: $replace_with"
+              sed -i "s|$to_replace|$replace_with|" test-config/test/helm/templates/device-registry.yaml
+          fi
+
+      - name: Pushes test file
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: 'test-config/test/helm/templates/device-registry.yaml'
+          destination_repo: 'mmulholla/helm-station-config'
+          destination_folder: 'test/helm/templates'
+          user_email: 'mmulholl@redhat.com'
+          user_name: 'mmulholla'
+          commit_message: 'Update test config chart version for Argo CD pipeline testing'
+
