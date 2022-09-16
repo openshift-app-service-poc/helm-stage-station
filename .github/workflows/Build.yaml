@@ -83,7 +83,7 @@ jobs:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'test-config/test/helm/templates/device-registry.yaml'
-          destination_repo: 'mmulholla/helm-station-config'
+          destination_repo: 'openshift-app-service-poc/helm-station-config'
           destination_folder: 'test/helm/templates'
           user_email: 'mmulholl@redhat.com'
           user_name: 'mmulholla'
