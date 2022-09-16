@@ -120,7 +120,7 @@ jobs:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'config-chart/chart/device-registry/Chart.yaml'
-          destination_repo: 'openshift-app-service-poc/helm-station-config'
+          destination_repo: 'Kartikey-star/helm-station-config'
           destination_folder: 'chart/device-registry'
           user_email: 'mmulholl@redhat.com'
           user_name: 'mmulholla'
@@ -132,7 +132,7 @@ jobs:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'config-chart/chart/device-registry/values-test.yaml'
-          destination_repo: 'openshift-app-service-poc/helm-station-config'
+          destination_repo: 'Kartikey-star/helm-station-config'
           destination_folder: 'chart/device-registry'
           user_email: 'mmulholl@redhat.com'
           user_name: 'mmulholla'
