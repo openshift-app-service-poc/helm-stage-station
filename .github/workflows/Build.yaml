@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
-          repository: Kartikey-star/helm-station-config
+          repository: openshift-app-service-poc/helm-station-config
           path: "config-chart"
 
       - name: Get metadata from chart config yaml
@@ -123,7 +123,7 @@ jobs:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'config-chart/chart/device-registry/Chart.yaml'
-          destination_repo: 'Kartikey-star/helm-station-config'
+          destination_repo: 'openshift-app-service-poc/helm-station-config'
           destination_folder: 'chart/device-registry'
           user_email: 'mmulholl@redhat.com'
           user_name: 'mmulholla'
@@ -135,7 +135,7 @@ jobs:
             API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'config-chart/chart/device-registry/values-test.yaml'
-          destination_repo: 'Kartikey-star/helm-station-config'
+          destination_repo: 'openshift-app-service-poc/helm-station-config'
           destination_folder: 'chart/device-registry'
           user_email: 'kmamgain@redhat.com'
           user_name: 'kmamgain'
