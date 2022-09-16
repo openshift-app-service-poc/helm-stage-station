@@ -18,7 +18,7 @@ spec:
         app: restapi
     spec:
       containers:
-      - image: {{ .Values.device.image }}:{{ .Values.device.tag }}
+      - image: {{ .Values.deviceImage }}:{{ .Values.deviceTag }}
         name: device-image
         resources: {}
         env:
