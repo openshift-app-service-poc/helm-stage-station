@@ -134,6 +134,6 @@ jobs:
           source_file: 'config-chart/chart/device-registry/values-test.yaml'
           destination_repo: 'Kartikey-star/helm-station-config'
           destination_folder: 'chart/device-registry'
-          user_email: 'mmulholl@redhat.com'
-          user_name: 'mmulholla'
+          user_email: 'kmamgain@redhat.com'
+          user_name: 'kmamgain'
           commit_message: 'Update config chart values device tag for Argo CD pipeline testing'
