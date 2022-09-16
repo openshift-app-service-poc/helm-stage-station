@@ -69,8 +69,8 @@ jobs:
 
       - if:  ${{ steps.config-chart-yaml-data.outputs.data != steps.pr-chart-yaml-data.outputs.data ||  steps.config-values-yaml-data.outputs.data != steps.pr-values-yaml-data.outputs.data}}
         run: |
-          echo "we have some work to do version was $config-chart-yaml-data.outputs.data and now $steps.pr-chart-yaml-data.outputs.data"
-          echo "we have some work to do device tag  was $steps.config-values-yaml-data.outputs.data and now $steps.pr-values-yaml-data.outputs.data"
+          echo "we have some work to do version was ${{steps.config-chart-yaml-data.outputs.data}} and now ${{steps.pr-chart-yaml-data.outputs.data}}"
+          echo "we have some work to do device tag  was ${{steps.config-values-yaml-data.outputs.data}} and now ${{steps.pr-values-yaml-data.outputs.data}}"
 
 
       # - name: Update config file to trigger pipeline
